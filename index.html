@@ -1,3 +1,5 @@
+
+     
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,9 +17,10 @@
     <div id="result"></div>
 
     <script>
+        const resultDiv = document.getElementById('result');
+
         document.getElementById('convertButton').addEventListener('click', async function() {
             const fileInput = document.getElementById('fileInput');
-            const resultDiv = document.getElementById('result');
 
             if (fileInput.files.length === 0) {
                 resultDiv.innerHTML = 'Please select a file first.';
@@ -62,6 +65,4 @@
     </script>
 </body>
 </html>
-
-     
 
