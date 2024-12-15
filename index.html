@@ -1,5 +1,4 @@
 
-     
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,9 +14,11 @@
     <input type="file" id="fileInput" />
     <button id="convertButton">Convert</button>
     <div id="result"></div>
+    <a id="downloadLink" style="display:none;">Download Converted File</a>
 
     <script>
         const resultDiv = document.getElementById('result');
+        const downloadLink = document.getElementById('downloadLink');
 
         document.getElementById('convertButton').addEventListener('click', async function() {
             const fileInput = document.getElementById('fileInput');
@@ -32,9 +33,11 @@
 
             try {
                 if (fileType === 'application/pdf') {
-                    await convertPdfToWord(file);
+                    const convertedFile = await convertPdfToWord(file);
+                    displayDownloadLink('converted.docx', convertedFile);
                 } else if (fileType.startsWith('image/')) {
-                    await extractTextFromImage(file);
+                    const text = await extractTextFromImage(file);
+                    resultDiv.innerHTML = 'Extracted Text: <pre>' + text + '</pre>';
                 } else {
                     resultDiv.innerHTML = 'Unsupported file type. Please upload a PDF or an image.';
                 }
@@ -47,6 +50,9 @@
             resultDiv.innerHTML = 'Converting PDF to Word... (this is a placeholder)';
             await new Promise(resolve => setTimeout(resolve, 2000));
             resultDiv.innerHTML = 'PDF converted to Word successfully!';
+            // Placeholder for the converted file (replace with actual conversion logic)
+            const blob = new Blob(['This is a converted Word file.'], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+            return blob;
         }
 
         async function extractTextFromImage(file) {
@@ -60,9 +66,16 @@
             const { data: { text } } = await worker.recognize(file);
             await worker.terminate();
 
-            resultDiv.innerHTML = 'Extracted Text: <pre>' + text + '</pre>';
+            return text;
+        }
+
+        function displayDownloadLink(filename, fileBlob) {
+            const url = URL.createObjectURL(fileBlob);
+            downloadLink.href = url;
+            downloadLink.download = filename;
+            downloadLink.style.display = 'inline';
+            downloadLink.innerText = 'Download Converted File';
         }
     </script>
 </body>
 </html>
-
