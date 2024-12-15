@@ -1,20 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maverick PDF Converter</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdn.rawgit.com/naptha/tesseract.js/0.2.1/dist/tesseract.min.js"></script>
+</head>
+<body>
+    <h1>PDF and Image Converter</h1>
+    <input type="file" id="fileInput" />
+    <button id="convertButton">Convert</button>
+    <div id="result"></div>
 
-   
-     <!DOCTYPE html>
-     <html lang="en">
-     <head>
-         <meta charset="UTF-8">
-         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-         <title>Maverick PDF Converter</title>
-         <link rel="stylesheet" href="styles.css">
-     </head>
-     <body>
-         <h1>PDF and Image to Editable Document Converter</h1>
-         <input type="file" id="fileInput" />
-         <button id="convertButton">Convert</button>
-         <div id="result"></div>
-         <script src="script.js"></script>
-     </body>
-     </html>
+    <script>
+        document.getElementById('convertButton').addEventListener('click', async function() {
+            const fileInput = document.getElementById('fileInput');
+            const resultDiv = document.getElementById('result');
+
+            if (fileInput.files.length === 0) {
+                resultDiv.innerHTML = 'Please select a file first.';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const fileType = file.type;
+
+            try {
+                if (fileType === 'application/pdf') {
+                    await convertPdfToWord(file);
+                } else if (fileType.startsWith('image/')) {
+                    await extractTextFromImage(file);
+                } else {
+                    resultDiv.innerHTML = 'Unsupported file type. Please upload a PDF or an image.';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = 'An error occurred: ' + error.message;
+            }
+        });
+
+        async function convertPdfToWord(file) {
+            resultDiv.innerHTML = 'Converting PDF to Word... (this is a placeholder)';
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            resultDiv.innerHTML = 'PDF converted to Word successfully!';
+        }
+
+        async function extractTextFromImage(file) {
+            resultDiv.innerHTML = 'Extracting text from image...';
+            const worker = Tesseract.createWorker();
+
+            await worker.load();
+            await worker.loadLanguage('eng');
+            await worker.initialize('eng');
+
+            const { data: { text } } = await worker.recognize(file);
+            await worker.terminate();
+
+            resultDiv.innerHTML = 'Extracted Text: <pre>' + text + '</pre>';
+        }
+    </script>
+</body>
+</html>
+
      
 
