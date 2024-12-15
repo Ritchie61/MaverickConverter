@@ -50,7 +50,7 @@
             await new Promise(resolve => setTimeout(resolve, 2000));
             resultDiv.innerHTML = 'PDF converted to Word successfully!';
             const blob = new Blob(['This is a converted Word file.'], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-            return blob;
+            return blob; // Make sure you return a valid Blob
         }
 
         async function extractTextFromImage(file) {
@@ -71,7 +71,7 @@
             const url = URL.createObjectURL(fileBlob);
             downloadLink.href = url;
             downloadLink.download = filename;
-            downloadLink.style.display = 'inline'; // Corrected this line
+            downloadLink.style.display = 'inline';
             downloadLink.innerText = 'Download Converted File';
         }
     </script>
